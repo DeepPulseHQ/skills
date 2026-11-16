@@ -1,0 +1,10 @@
+node_modules/
+*.tgz
+.DS_Store
+.env
+.env.*
+.agents/
+.claude/
+.cursor/
+.tucui/
+skills-lock.json

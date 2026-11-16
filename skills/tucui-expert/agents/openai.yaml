@@ -1,0 +1,4 @@
+interface:
+  display_name: "图萃专家研究"
+  short_description: "调用图萃授权知识库检索临床依据，撰写并导出带引用的本地研究报告"
+  default_prompt: "使用 $tucui-expert 检索图萃授权知识库，为我的研究问题整理依据并导出带引用的 HTML 和 Markdown 报告。"
