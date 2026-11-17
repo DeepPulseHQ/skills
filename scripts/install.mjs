@@ -3,7 +3,7 @@ import { spawnSync } from 'node:child_process';
 import { existsSync } from 'node:fs';
 import { join } from 'node:path';
 
-const HELP = `图萃 Skill + CLI 安装器
+const HELP = `evidoc Skill + CLI 安装器
 
 用法：npx --yes github:DeepPulseHQ/skills [选项]
 
@@ -12,7 +12,7 @@ const HELP = `图萃 Skill + CLI 安装器
   --help         查看帮助，不执行安装
 
 指定 --agent 后自动确认；省略时在终端交互选择 Agent。
-CLI 始终通过 npm install -g tucui-cli@latest 安装或更新。
+CLI 始终通过 npm install -g @deeppulse/evidoc@latest 安装或更新。
 要求 Node.js 22.20+、npm、Git；不需要 GitHub 登录。
 `;
 
@@ -62,7 +62,7 @@ function npm(args, options = {}) {
 }
 
 function skills(args, options = {}) {
-  // Pin the tested skills CLI; tucui-cli itself uses the requested latest tag.
+  // Pin the tested skills CLI; @deeppulse/evidoc itself uses the requested latest tag.
   return npm(['exec', '--yes', '--package=skills@1.8.1', '--', 'skills', ...args], options);
 }
 
@@ -81,18 +81,18 @@ function main() {
     throw new Error('非交互安装请指定当前 Agent，例如 --agent codex 或 --agent claude-code。');
   }
 
-  console.log('1/3 安装或更新 tucui-cli@latest…');
-  npm(['install', '-g', 'tucui-cli@latest']);
+  console.log('1/3 安装或更新 @deeppulse/evidoc@latest…');
+  npm(['install', '-g', '@deeppulse/evidoc@latest']);
 
   console.log('2/3 验证 CLI…');
   const prefix = npm(['prefix', '-g'], { capture: true });
-  const cli = join(prefix, ...(process.platform === 'win32' ? [] : ['lib']), 'node_modules', 'tucui-cli', 'bin', 'tucui.js');
+  const cli = join(prefix, ...(process.platform === 'win32' ? [] : ['lib']), 'node_modules', '@deeppulse', 'evidoc', 'bin', 'tucui.js');
   if (!existsSync(cli)) throw new Error(`npm 安装结束，但找不到 CLI：${cli}`);
   run(process.execPath, [cli, '--version']);
   run(process.execPath, [cli, 'help'], { capture: true });
 
-  console.log('3/3 安装 tucui-expert skill…');
-  const installArgs = ['add', 'DeepPulseHQ/skills', '--skill', 'tucui-expert'];
+  console.log('3/3 安装 evidoc skill…');
+  const installArgs = ['add', 'DeepPulseHQ/skills', '--skill', 'evidoc'];
   if (!options.project) installArgs.push('--global');
   if (options.agents.length) installArgs.push('--agent', ...options.agents, '--yes');
   skills(installArgs);
@@ -104,21 +104,21 @@ function main() {
     if (agent) listArgs.push('--agent', agent);
     const entries = JSON.parse(skills(listArgs, { capture: true }));
     const installed = Array.isArray(entries) && entries.find(entry =>
-      entry.name === 'tucui-expert' && entry.scope === (options.project ? 'project' : 'global') &&
+      entry.name === 'evidoc' && entry.scope === (options.project ? 'project' : 'global') &&
       entry.source === 'DeepPulseHQ/skills' && entry.agents?.length &&
       typeof entry.path === 'string' && existsSync(join(entry.path, 'SKILL.md')));
-    if (!installed) throw new Error(`未验证到 ${agent || '所选 Agent'} 的 tucui-expert 安装，请检查 skills 输出。`);
+    if (!installed) throw new Error(`未验证到 ${agent || '所选 Agent'} 的 evidoc 安装，请检查 skills 输出。`);
     paths.add(installed.path);
   }
 
   console.log('\nCLI 与 skill 已安装，并通过版本、帮助和 skill 文件检查。');
   for (const path of paths) console.log(`Skill：${path}`);
   console.log(`skill 范围：${options.project ? '当前项目' : '当前用户'}。在 Agent 中刷新技能或新开会话。`);
-  console.log('首次联网使用：在你自己的终端运行 tucui init，填写服务地址并隐藏输入 API Key，再运行 tucui doctor。');
-  const version = spawnSync('tucui', ['--version'], { stdio: 'ignore', shell: process.platform === 'win32' });
+  console.log('首次联网使用：在你自己的终端运行 evidoc init，填写服务地址并隐藏输入 API Key，再运行 evidoc doctor。');
+  const version = spawnSync('evidoc', ['--version'], { stdio: 'ignore', shell: process.platform === 'win32' });
   if (version.error || version.status !== 0) {
     const bin = process.platform === 'win32' ? prefix : join(prefix, 'bin');
-    console.log(`当前 PATH 还不能运行 tucui。请将以下目录加入 PATH 并重启终端：${bin}`);
+    console.log(`当前 PATH 还不能运行 evidoc。请将以下目录加入 PATH 并重启终端：${bin}`);
     console.log(`也可用 Node 直接运行 CLI：${cli}`);
   }
 }

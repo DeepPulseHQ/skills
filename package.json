@@ -2,7 +2,7 @@
   "name": "@deeppulse/skills",
   "version": "0.1.0",
   "private": true,
-  "description": "Install the Tucui expert skill and tucui-cli together",
+  "description": "Install the evidoc skill and @deeppulse/evidoc together",
   "type": "module",
   "license": "MIT",
   "repository": {
@@ -10,7 +10,7 @@
     "url": "git+https://github.com/DeepPulseHQ/skills.git"
   },
   "engines": { "node": ">=22.20.0" },
-  "bin": { "tucui-skills": "scripts/install.mjs" },
+  "bin": { "evidoc-skills": "scripts/install.mjs" },
   "files": ["scripts/install.mjs", "skills", "README.md", "INSTALL.md", "LICENSE"],
   "scripts": {
     "test": "node --test",
